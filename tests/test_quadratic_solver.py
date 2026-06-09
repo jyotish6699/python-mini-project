@@ -86,5 +86,33 @@ class TestQuadraticSolver(unittest.TestCase):
         self.assertIn("Error: Please enter valid numbers.", output)
         self.assertIn("Error: Not a quadratic equation (a cannot be 0)", output)
 
+    def test_solve_quadratic_float_coefficients(self):
+        roots_type, r1, r2, d = solve_quadratic(
+            0.5,
+            -2.5,
+            3
+        )
+
+        self.assertEqual(roots_type, "distinct_real")
+        self.assertEqual(set([round(r1, 5), round(r2, 5)]), {2.0, 3.0})
+
+    @patch('builtins.input')
+    @patch('sys.stdout', new_callable=io.StringIO)
+    def test_main_quit_immediately(
+        self,
+        mock_stdout,
+        mock_input
+    ):
+        mock_input.side_effect = ["q"]
+
+        main()
+
+        output = mock_stdout.getvalue()
+
+        self.assertIn(
+            "Goodbye",
+            output
+        )
+
 if __name__ == '__main__':
     unittest.main()
